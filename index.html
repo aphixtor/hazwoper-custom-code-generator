@@ -537,6 +537,82 @@
                     </div>
                 </div>
 
+                <!-- Resources Tab -->
+                <div class="tab-pane fade" id="resources" role="tabpanel" aria-labelledby="resources-tab">
+                    <div class="section-content">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="card mb-4">
+                                    <div class="card-header">
+                                        <h4 class="mb-0"><i class="fas fa-file-excel text-success me-2"></i>Upload Excel
+                                            File</h4>
+                                    </div>
+                                    <div class="card-body">
+                                        <input id="resourceFileInput" type="file" accept=".xlsx,.xls"
+                                            class="form-control" />
+                                        <div class="file-info mt-2" id="resourceFileInfo"></div>
+                                    </div>
+                                </div>
+
+                                <div class="progress-container card mb-4" id="resourceProgress">
+                                    <div class="card-body">
+                                        <div class="progress mb-2">
+                                            <div class="progress-bar progress-bar-striped progress-bar-animated"
+                                                role="progressbar" style="width: 0%"></div>
+                                        </div>
+                                        <div class="text-center" id="resourceProgressText">Processing...</div>
+                                    </div>
+                                </div>
+
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h4 class="mb-0"><i class="fas fa-cogs text-info me-2"></i>Process Resources
+                                        </h4>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="d-grid gap-2 d-md-block">
+                                            <button class="btn btn-primary mb-2" onclick="processResourceFile()">
+                                                <i class="fas fa-upload me-2"></i>Process File
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div id="resourcesCodeArea" class="generated-content-area">
+                                    <div id="resourcesEmptyState" class="empty-state">
+                                        <i class="fas fa-code"></i>
+                                        <h4>No Resource HTML Generated Yet</h4>
+                                        <p>Upload a file and process resources to see the HTML here</p>
+                                    </div>
+
+                                    <div id="resourcesCodeSection" class="code-section">
+                                        <div class="card">
+                                            <div class="code-header">
+                                                <h4 class="code-title"><i class="fas fa-code text-primary"></i>Generated
+                                                    HTML</h4>
+                                                <div class="code-actions">
+                                                    <button class="preview-icon-btn"
+                                                        onclick="openPreviewDrawer('htmlOutput', 'Resources')">
+                                                        <i class="fas fa-eye"></i> Preview
+                                                    </button>
+                                                    <button class="copy-btn" onclick="copyToClipboard('htmlOutput')">
+                                                        <i class="fas fa-copy"></i> Copy
+                                                    </button>
+                                                </div>
+                                            </div>
+                                            <div class="card-body p-0">
+                                                <textarea class="code-editor" id="htmlOutput" rows="20"
+                                                    placeholder="Resource HTML will appear here after processing"></textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
                 <!-- Add this to your tab-content section -->
                 <div class="tab-pane fade" id="nbsp" role="tabpanel" aria-labelledby="nbsp-tab">
