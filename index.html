@@ -40,71 +40,151 @@
 
     <!-- Main Content Wrapper -->
     <div id="mainContent" class="main-content-wrapper" style="display: none;">
-        <div class="hero-section">
-            <div class="container">
-                <div class="row">
-                    <div class="col-12 text-center">
-                        <img src="https://staging-media.hazwoper-osha.com/wp-content/uploads/2025/10/1759824844/logo.gif"
-                            alt="Website Logo" style="height: 125px;width: auto;border-radius: 50%;" class="mb-3">
-                        <h1>Course Content Generator</h1>
-                        <p class="lead text-center fw-normal">Extract Overview, Syllabus, FAQs, Glossary, Resources and Blog
-                            Content from your documents</p>
+
+        <!-- Mobile navbar -->
+        <nav class="navbar navbar-mobile navbar-expand-lg d-lg-none">
+            <div class="container-fluid">
+                <a class="navbar-brand d-flex align-items-center" href="#">
+                    <img src="https://staging-media.hazwoper-osha.com/wp-content/uploads/2025/10/1759824844/logo.gif" alt="Logo">
+                    <span class="ms-2 fw-semibold">Generators</span>
+                </a>
+                <!-- Theme toggle button for mobile navbar -->
+                <div class="d-flex align-items-center">
+                    <button class="btn btn-outline-primary btn-sm me-2" id="mobileThemeToggle">
+                        <i class="fas fa-moon"></i>
+                    </button>
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mobileTabNav"
+                        aria-controls="mobileTabNav" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"><i class="fas fa-bars"></i></span>
+                    </button>
+                </div>
+                <div class="collapse navbar-collapse" id="mobileTabNav">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="course-tab-mobile" data-bs-toggle="tab" data-bs-target="#course"
+                                type="button" role="tab" aria-controls="course" aria-selected="true">
+                                <i class="fas fa-graduation-cap me-2"></i><span class="nav-text">Web Content</span>
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="glossary-tab-mobile" data-bs-toggle="tab" data-bs-target="#glossary"
+                                type="button" role="tab" aria-controls="glossary" aria-selected="false">
+                                <i class="fas fa-book me-2"></i><span class="nav-text">Glossary</span>
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="resources-tab-mobile" data-bs-toggle="tab" data-bs-target="#resources"
+                                type="button" role="tab" aria-controls="resources" aria-selected="false">
+                                <i class="fas fa-file-excel me-2"></i><span class="nav-text">Resources</span>
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="blog-tab-mobile" data-bs-toggle="tab" data-bs-target="#blog" type="button"
+                                role="tab" aria-controls="blog" aria-selected="false">
+                                <i class="fas fa-blog me-2"></i><span class="nav-text">Blog</span>
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="nbsp-tab-mobile" data-bs-toggle="tab" data-bs-target="#nbsp" type="button"
+                                role="tab" aria-controls="nbsp" aria-selected="false">
+                                <i class="fas fa-code me-2"></i><span class="nav-text">HTML Cleaner</span>
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="image-converter-tab-mobile" data-bs-toggle="tab"
+                                data-bs-target="#image-converter" type="button" role="tab" aria-controls="image-converter"
+                                aria-selected="false">
+                                <i class="fas fa-image me-2"></i><span class="nav-text">Image Converter</span>
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+        <div class="layout-wrapper">
+            <!-- Sidebar navigation -->
+            <aside class="sidebar">
+                <div class="sidebar-header">
+                    <img src="https://staging-media.hazwoper-osha.com/wp-content/uploads/2025/10/1759824844/logo.gif"
+                        alt="Logo" class="sidebar-logo">
+                    <h2 class="sidebar-title">Content Suite</h2>
+                </div>
+                <div class="sidebar-nav">
+                    <ul class="nav flex-column nav-pills" id="myTab" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="course-tab" data-bs-toggle="tab" data-bs-target="#course"
+                                type="button" role="tab" aria-controls="course" aria-selected="true">
+                                <i class="fas fa-graduation-cap me-2"></i><span class="nav-text">Web Content Generator</span>
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="glossary-tab" data-bs-toggle="tab" data-bs-target="#glossary"
+                                type="button" role="tab" aria-controls="glossary" aria-selected="false">
+                                <i class="fas fa-book me-2"></i><span class="nav-text">Glossary Generator</span>
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="resources-tab" data-bs-toggle="tab" data-bs-target="#resources"
+                                type="button" role="tab" aria-controls="resources" aria-selected="false">
+                                <i class="fas fa-file-excel me-2"></i><span class="nav-text">Resource Generator</span>
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="blog-tab" data-bs-toggle="tab" data-bs-target="#blog" type="button"
+                                role="tab" aria-controls="blog" aria-selected="false">
+                                <i class="fas fa-blog me-2"></i><span class="nav-text">Blog Generator</span>
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="nbsp-tab" data-bs-toggle="tab" data-bs-target="#nbsp" type="button"
+                                role="tab" aria-controls="nbsp" aria-selected="false">
+                                <i class="fas fa-code me-2"></i><span class="nav-text">HTML Cleaner</span>
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="image-converter-tab" data-bs-toggle="tab"
+                                data-bs-target="#image-converter" type="button" role="tab" aria-controls="image-converter"
+                                aria-selected="false">
+                                <i class="fas fa-image me-2"></i><span class="nav-text">Image Converter</span>
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+                <!-- Theme button in sidebar footer -->
+                <div class="sidebar-footer">
+                    <button class="btn btn-outline-primary w-100" id="sidebarThemeToggle">
+                        <i class="fas fa-moon me-2"></i>
+                        <span class="theme-text">Switch to Light Mode</span>
+                    </button>
+                </div>
+            </aside>
+
+            <!-- Main content area -->
+            <div class="main-content">
+                <div class="hero-section">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-12 text-center">
+                                <img src="https://staging-media.hazwoper-osha.com/wp-content/uploads/2025/10/1759824844/logo.gif"
+                                    alt="Website Logo" style="height: 125px;width: auto;border-radius: 50%;" class="mb-3">
+                                <h1>Course Content Generator</h1>
+                                <p class="lead text-center fw-normal">Extract Overview, Syllabus, FAQs, Glossary, Resources and Blog
+                                    Content from your documents</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </div>
-        <div class="card mb-4">
-            <div class="card-header d-flex justify-content-between align-items-center">
-                <h4 class="mb-0"><i class="fas fa-palette me-2"></i>Theme Settings</h4>
-                <div class="theme-switcher">
-                    <button class="btn btn-outline-primary" id="globalThemeToggle">
-                        <i class="fas fa-moon me-2"></i>Switch to Light Mode
-                    </button>
+                <div class="card mb-4">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h4 class="mb-0"><i class="fas fa-palette me-2"></i>Theme Settings</h4>
+                        <div class="theme-switcher d-none d-lg-block">
+                            <small class="text-secondary">Use the sidebar toggle to switch themes</small>
+                        </div>
+                    </div>
                 </div>
-            </div>
-        </div>
-        <div class="container-xxl mb-5">
-            <ul class="nav nav-tabs" id="myTab" role="tablist">
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link active" id="course-tab" data-bs-toggle="tab" data-bs-target="#course"
-                        type="button" role="tab" aria-controls="course" aria-selected="true">
-                        <i class="fas fa-graduation-cap me-2"></i>Web Content Generator
-                    </button>
-                </li>
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="glossary-tab" data-bs-toggle="tab" data-bs-target="#glossary"
-                        type="button" role="tab" aria-controls="glossary" aria-selected="false">
-                        <i class="fas fa-book me-2"></i>Glossary Generator
-                    </button>
-                </li>
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="resources-tab" data-bs-toggle="tab" data-bs-target="#resources"
-                        type="button" role="tab" aria-controls="resources" aria-selected="false">
-                        <i class="fas fa-file-excel me-2"></i>Resource Generator
-                    </button>
-                </li>
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="blog-tab" data-bs-toggle="tab" data-bs-target="#blog" type="button"
-                        role="tab" aria-controls="blog" aria-selected="false">
-                        <i class="fas fa-blog me-2"></i>Blog Generator
-                    </button>
-                </li>
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="nbsp-tab" data-bs-toggle="tab" data-bs-target="#nbsp" type="button"
-                        role="tab" aria-controls="nbsp" aria-selected="false">
-                        <i class="fas fa-code me-2"></i>HTML Cleaner
-                    </button>
-                </li>
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="image-converter-tab" data-bs-toggle="tab"
-                        data-bs-target="#image-converter" type="button" role="tab" aria-controls="image-converter"
-                        aria-selected="false">
-                        <i class="fas fa-image me-2"></i>Image Converter
-                    </button>
-                </li>
-            </ul>
-
-            <div class="tab-content" id="myTabContent">
+                <div class="container-xxl mb-5">
+                    <div class="tab-content" id="myTabContent">
                 <!-- Course Content Tab -->
                 <div class="tab-pane fade show active" id="course" role="tabpanel" aria-labelledby="course-tab">
                     <div class="section-content">
@@ -600,11 +680,12 @@
                                                     <button class="copy-btn" onclick="copyToClipboard('htmlOutput')">
                                                         <i class="fas fa-copy"></i> Copy
                                                     </button>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                            <div class="card-body p-0">
-                                                <textarea class="code-editor" id="htmlOutput" rows="20"
-                                                    placeholder="Resource HTML will appear here after processing"></textarea>
+                                                <div class="card-body p-0">
+                                                    <textarea class="code-editor" id="htmlOutput" rows="20"
+                                                        placeholder="Resource HTML will appear here after processing"></textarea>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -1404,4 +1485,148 @@
     <script src="js/resource-generator.js"></script>
     <script src="js/nbsp-remover.js"></script>
     <script src="js/img-converter.js"></script>
+    <script>
+        // Theme toggle functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const themeToggle = document.getElementById('sidebarThemeToggle');
+            const mobileThemeToggle = document.getElementById('mobileThemeToggle');
+            const globalThemeToggle = document.getElementById('globalThemeToggle');
+            
+            function toggleTheme() {
+                document.body.classList.toggle('light-theme');
+                const isLightTheme = document.body.classList.contains('light-theme');
+                updateThemeButton(isLightTheme);
+                
+                // Save theme preference
+                localStorage.setItem('theme', isLightTheme ? 'light' : 'dark');
+            }
+            
+            function updateThemeButton(isLightTheme) {
+                const icon = isLightTheme ? 'fa-sun' : 'fa-moon';
+                const text = isLightTheme ? 'Switch to Dark Mode' : 'Switch to Light Mode';
+                
+                if (themeToggle) {
+                    themeToggle.innerHTML = `<i class="fas ${icon} me-2"></i><span class="theme-text">${text}</span>`;
+                }
+                if (mobileThemeToggle) {
+                    mobileThemeToggle.innerHTML = `<i class="fas ${icon}"></i>`;
+                }
+                if (globalThemeToggle) {
+                    globalThemeToggle.innerHTML = `<i class="fas ${icon} me-2"></i>${text}`;
+                }
+            }
+            
+            // Initialize theme
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'light') {
+                document.body.classList.add('light-theme');
+            }
+            updateThemeButton(savedTheme === 'light');
+            
+            // Add event listeners
+            if (themeToggle) themeToggle.addEventListener('click', toggleTheme);
+            if (mobileThemeToggle) mobileThemeToggle.addEventListener('click', toggleTheme);
+            if (globalThemeToggle) globalThemeToggle.addEventListener('click', toggleTheme);
+            
+            // Responsive sidebar functionality
+            function handleSidebarResponsive() {
+                const sidebar = document.querySelector('.sidebar');
+                const mainContent = document.querySelector('.main-content');
+                const screenWidth = window.innerWidth;
+                
+                if (screenWidth >= 769 && screenWidth <= 992) {
+                    // Show both sidebar and navbar in this range
+                    sidebar.style.display = 'flex';
+                    sidebar.style.transform = 'translateX(0)';
+                    sidebar.style.width = '90px';
+                    mainContent.style.marginLeft = '90px';
+                    mainContent.style.width = 'calc(100% - 90px)';
+                    
+                    // Hide text in sidebar for this range
+                    document.querySelectorAll('.sidebar-nav .nav-text').forEach(el => {
+                        el.style.display = 'none';
+                    });
+                    document.querySelector('.sidebar-title').style.display = 'none';
+                    document.querySelector('.theme-text').style.display = 'none';
+                    
+                    // Show only icons in theme button
+                    const themeBtnIcon = document.querySelector('#sidebarThemeToggle i');
+                    themeBtnIcon.classList.remove('me-2');
+                } else if (screenWidth <= 768) {
+                    // Mobile view
+                    sidebar.style.display = 'none';
+                    mainContent.style.marginLeft = '0';
+                    mainContent.style.width = '100%';
+                } else if (screenWidth > 992 && screenWidth <= 1200) {
+                    // Medium screen - collapsed sidebar
+                    sidebar.style.display = 'flex';
+                    sidebar.style.width = '90px';
+                    sidebar.style.transform = 'translateX(0)';
+                    mainContent.style.marginLeft = '90px';
+                    mainContent.style.width = 'calc(100% - 90px)';
+                    
+                    // Hide text
+                    document.querySelectorAll('.sidebar-nav .nav-text').forEach(el => {
+                        el.style.display = 'none';
+                    });
+                    document.querySelector('.sidebar-title').style.display = 'none';
+                    document.querySelector('.theme-text').style.display = 'none';
+                    document.querySelector('#sidebarThemeToggle i').classList.remove('me-2');
+                } else if (screenWidth > 1200) {
+                    // Large screen - full sidebar
+                    sidebar.style.display = 'flex';
+                    sidebar.style.width = '250px';
+                    sidebar.style.transform = 'translateX(0)';
+                    mainContent.style.marginLeft = '250px';
+                    mainContent.style.width = 'calc(100% - 250px)';
+                    
+                    // Show text
+                    document.querySelectorAll('.sidebar-nav .nav-text').forEach(el => {
+                        el.style.display = 'inline';
+                    });
+                    document.querySelector('.sidebar-title').style.display = 'block';
+                    document.querySelector('.theme-text').style.display = 'inline';
+                    document.querySelector('#sidebarThemeToggle i').classList.add('me-2');
+                }
+            }
+            
+            // Initial call
+            handleSidebarResponsive();
+            
+            // Add resize listener
+            window.addEventListener('resize', handleSidebarResponsive);
+            
+            // Hover effect for collapsed sidebar on large screens
+            document.querySelector('.sidebar').addEventListener('mouseenter', function() {
+                if (window.innerWidth > 1200 && window.innerWidth <= 1600) {
+                    this.style.width = '250px';
+                    document.querySelector('.main-content').style.marginLeft = '250px';
+                    document.querySelector('.main-content').style.width = 'calc(100% - 250px)';
+                    
+                    // Show text on hover
+                    document.querySelectorAll('.sidebar-nav .nav-text').forEach(el => {
+                        el.style.display = 'inline';
+                    });
+                    document.querySelector('.sidebar-title').style.display = 'block';
+                    document.querySelector('.theme-text').style.display = 'inline';
+                }
+            });
+            
+            document.querySelector('.sidebar').addEventListener('mouseleave', function() {
+                if (window.innerWidth > 1200 && window.innerWidth <= 1600) {
+                    this.style.width = '90px';
+                    document.querySelector('.main-content').style.marginLeft = '90px';
+                    document.querySelector('.main-content').style.width = 'calc(100% - 90px)';
+                    
+                    // Hide text on leave
+                    document.querySelectorAll('.sidebar-nav .nav-text').forEach(el => {
+                        el.style.display = 'none';
+                    });
+                    document.querySelector('.sidebar-title').style.display = 'none';
+                    document.querySelector('.theme-text').style.display = 'none';
+                }
+            });
+        });
     </script>
+</body>
+</html>
