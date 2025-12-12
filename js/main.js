@@ -488,7 +488,7 @@ function openPreviewDrawerWithContent(content, title) {
 
 // ========== PERFECT ANIMATED THEME MANAGER ==========
 const themeManager = {
-    themes: ['dark', 'light', 'bw', 'gaming', 'hacker'],
+    themes: ['dark', 'light', 'neon-gaming', 'bw', 'hacker'],
     currentTheme: localStorage.getItem('theme') || 'dark',
     isAnimating: false,
 
@@ -502,43 +502,41 @@ const themeManager = {
 
     setTheme(theme, animate = true) {
         if (this.isAnimating) return;
-        if (this.currentTheme === theme) return;
-        
         this.isAnimating = true;
 
         const oldTheme = this.currentTheme;
-        
-        // Remove old theme class
-        document.body.classList.remove(`${oldTheme}-theme`);
-        
-        // Add new theme class
-        document.body.classList.add(`${theme}-theme`);
 
-        // Update state
-        localStorage.setItem('theme', theme);
-        this.currentTheme = theme;
+        if (animate) {
+            // Smooth theme transition
+            document.body.style.transition = 'all 0.5s cubic-bezier(0.4, 0, 0.2, 1)';
+            
+            // Remove old theme class
+            document.body.classList.remove(`${oldTheme}-theme`);
+            
+            // Add new theme class
+            setTimeout(() => {
+                document.body.classList.add(`${theme}-theme`);
+                
+                // Update state after animation
+                setTimeout(() => {
+                    localStorage.setItem('theme', theme);
+                    this.currentTheme = theme;
+                    this.updateThemeToggleButton();
+                    document.body.style.transition = '';
+                    this.isAnimating = false;
+                }, 300);
+            }, 10);
 
-        // Update UI
-        this.updateThemeToggleButton();
+        } else {
+            // Apply theme instantly (no animation)
+            document.body.classList.remove(`${oldTheme}-theme`);
+            document.body.classList.add(`${theme}-theme`);
 
-        // Reset animation flag
-        setTimeout(() => {
+            localStorage.setItem('theme', theme);
+            this.currentTheme = theme;
+            this.updateThemeToggleButton();
             this.isAnimating = false;
-        }, 50);
-    },
-
-    toggleTheme() {
-        const currentIndex = this.themes.indexOf(this.currentTheme);
-        const nextIndex = (currentIndex + 1) % this.themes.length;
-        const newTheme = this.themes[nextIndex];
-
-        // Remove button animation
-        const button = document.getElementById('globalThemeToggle');
-        if (button) {
-            button.classList.remove('theme-toggling');
         }
-
-        this.setTheme(newTheme, true);
     },
 
     nextTheme() {
@@ -548,7 +546,7 @@ const themeManager = {
     },
 
     updateThemeToggleButton() {
-        const button = document.getElementById('globalThemeToggle');
+        const button = document.getElementById('themeToggleBtn');
         const mobileButton = document.getElementById('mobileThemeToggle');
         const sidebar = document.getElementById('appSidebar');
         const isCollapsed = sidebar && sidebar.classList.contains('collapsed');
@@ -556,16 +554,16 @@ const themeManager = {
         const themeIcons = {
             'dark': 'fa-moon',
             'light': 'fa-sun',
+            'neon-gaming': 'fa-gamepad',
             'bw': 'fa-chess-board',
-            'gaming': 'fa-gamepad',
             'hacker': 'fa-terminal'
         };
         
         const themeNames = {
             'dark': 'Dark',
             'light': 'Light',
+            'neon-gaming': 'Neon Gaming',
             'bw': 'Black & White',
-            'gaming': 'Gaming',
             'hacker': 'Hacker'
         };
 
@@ -573,63 +571,52 @@ const themeManager = {
             const nextIndex = (this.themes.indexOf(this.currentTheme) + 1) % this.themes.length;
             const nextTheme = this.themes[nextIndex];
             
+            // Update button content
             button.innerHTML = isCollapsed
                 ? `<i class="fas ${themeIcons[this.currentTheme]}"></i>`
-                : `<i class="fas ${themeIcons[this.currentTheme]} me-2"></i><span class="nav-text">Switch to ${themeNames[nextTheme]}</span>`;
+                : `<i class="fas ${themeIcons[this.currentTheme]} me-2"></i><span class="nav-text">${themeNames[this.currentTheme]}</span>`;
 
-            const icon = button.querySelector('i');
-            if (icon) {
-                icon.style.transform = 'rotate(0) scale(1)';
-            }
+            // Add tooltip for collapsed sidebar
+            button.title = isCollapsed ? themeNames[this.currentTheme] : '';
         }
 
         // Update mobile theme toggle
         if (mobileButton) {
             mobileButton.innerHTML = `<i class="fas ${themeIcons[this.currentTheme]}"></i>`;
+            mobileButton.title = themeNames[this.currentTheme];
         }
-        
-        // Update dropdown if it exists
-        this.updateThemeDropdown();
-    },
-    
-    updateThemeDropdown() {
-        const dropdownItems = document.querySelectorAll('.theme-selector .dropdown-item');
-        dropdownItems.forEach(item => {
-            item.classList.remove('active');
-            const theme = item.getAttribute('onclick').match(/'([^']+)'/)[1];
-            if (theme === this.currentTheme) {
-                item.classList.add('active');
-            }
-        });
     },
 
     setupThemeToggle() {
-        const button = document.getElementById('globalThemeToggle');
+        // Main theme toggle button
+        const button = document.getElementById('themeToggleBtn');
         if (button) {
             // Remove any existing listeners and re-add
             button.replaceWith(button.cloneNode(true));
-            const newButton = document.getElementById('globalThemeToggle');
+            const newButton = document.getElementById('themeToggleBtn');
 
-            newButton.addEventListener('click', () => this.toggleTheme());
+            newButton.addEventListener('click', (e) => {
+                e.preventDefault();
+                this.nextTheme();
+            });
 
             // Add keyboard support
             newButton.addEventListener('keydown', (e) => {
                 if (e.key === 'Enter' || e.key === ' ') {
                     e.preventDefault();
-                    this.toggleTheme();
+                    this.nextTheme();
                 }
             });
         }
         
-        // Setup dropdown theme selection
-        const dropdownItems = document.querySelectorAll('.theme-selector .dropdown-item');
-        dropdownItems.forEach(item => {
-            item.addEventListener('click', (e) => {
+        // Mobile theme toggle
+        const mobileButton = document.getElementById('mobileThemeToggle');
+        if (mobileButton) {
+            mobileButton.addEventListener('click', (e) => {
                 e.preventDefault();
-                const theme = item.getAttribute('onclick').match(/'([^']+)'/)[1];
-                this.setTheme(theme, true);
+                this.nextTheme();
             });
-        });
+        }
     },
 
     setupSystemThemeListener() {
@@ -657,11 +644,6 @@ const themeManager = {
         }
     }
 };
-
-// Global function for dropdown selection
-function setTheme(theme) {
-    themeManager.setTheme(theme, true);
-}
 
 // ========== INITIALIZATION ==========
 document.addEventListener("DOMContentLoaded", function () {
