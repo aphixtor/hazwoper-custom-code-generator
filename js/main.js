@@ -488,6 +488,7 @@ function openPreviewDrawerWithContent(content, title) {
 
 // ========== PERFECT ANIMATED THEME MANAGER ==========
 const themeManager = {
+    themes: ['dark', 'light', 'bw', 'gaming', 'hacker'],
     currentTheme: localStorage.getItem('theme') || 'dark',
     isAnimating: false,
 
@@ -499,43 +500,37 @@ const themeManager = {
         this.setupSystemThemeListener();
     },
 
-    applyTheme(theme, animate = true) {
+    setTheme(theme, animate = true) {
         if (this.isAnimating) return;
-        this.isAnimating = false;
+        if (this.currentTheme === theme) return;
+        
+        this.isAnimating = true;
 
         const oldTheme = this.currentTheme;
+        
+        // Remove old theme class
+        document.body.classList.remove(`${oldTheme}-theme`);
+        
+        // Add new theme class
+        document.body.classList.add(`${theme}-theme`);
 
-        if (animate) {
-            // Remove transition class
-            document.body.classList.remove('theme-changing');
+        // Update state
+        localStorage.setItem('theme', theme);
+        this.currentTheme = theme;
 
-            // Switch themes instantly without fade
-            document.body.classList.remove(`${oldTheme}-theme`);
-            document.body.classList.add(`${theme}-theme`);
+        // Update UI
+        this.updateThemeToggleButton();
 
-            // Update state
-            localStorage.setItem('theme', theme);
-            this.currentTheme = theme;
-
-            // Update UI
-            this.updateThemeToggleButton();
-
+        // Reset animation flag
+        setTimeout(() => {
             this.isAnimating = false;
-
-        } else {
-            // Apply theme instantly (no animation)
-            document.body.classList.remove(`${oldTheme}-theme`);
-            document.body.classList.add(`${theme}-theme`);
-
-            localStorage.setItem('theme', theme);
-            this.currentTheme = theme;
-            this.updateThemeToggleButton();
-            this.isAnimating = false;
-        }
+        }, 50);
     },
 
     toggleTheme() {
-        const newTheme = this.currentTheme === 'dark' ? 'light' : 'dark';
+        const currentIndex = this.themes.indexOf(this.currentTheme);
+        const nextIndex = (currentIndex + 1) % this.themes.length;
+        const newTheme = this.themes[nextIndex];
 
         // Remove button animation
         const button = document.getElementById('globalThemeToggle');
@@ -543,7 +538,13 @@ const themeManager = {
             button.classList.remove('theme-toggling');
         }
 
-        this.applyTheme(newTheme, true);
+        this.setTheme(newTheme, true);
+    },
+
+    nextTheme() {
+        const currentIndex = this.themes.indexOf(this.currentTheme);
+        const nextIndex = (currentIndex + 1) % this.themes.length;
+        this.setTheme(this.themes[nextIndex], true);
     },
 
     updateThemeToggleButton() {
@@ -551,31 +552,55 @@ const themeManager = {
         const mobileButton = document.getElementById('mobileThemeToggle');
         const sidebar = document.getElementById('appSidebar');
         const isCollapsed = sidebar && sidebar.classList.contains('collapsed');
+        
+        const themeIcons = {
+            'dark': 'fa-moon',
+            'light': 'fa-sun',
+            'bw': 'fa-chess-board',
+            'gaming': 'fa-gamepad',
+            'hacker': 'fa-terminal'
+        };
+        
+        const themeNames = {
+            'dark': 'Dark',
+            'light': 'Light',
+            'bw': 'Black & White',
+            'gaming': 'Gaming',
+            'hacker': 'Hacker'
+        };
 
         if (button) {
-            if (this.currentTheme === 'dark') {
-                button.innerHTML = isCollapsed
-                    ? '<i class="fas fa-sun"></i>'
-                    : '<i class="fas fa-sun"></i><span class="nav-text">Switch to Light Mode</span>';
-            } else {
-                button.innerHTML = isCollapsed
-                    ? '<i class="fas fa-moon"></i>'
-                    : '<i class="fas fa-moon"></i><span class="nav-text">Switch to Dark Mode</span>';
-            }
+            const nextIndex = (this.themes.indexOf(this.currentTheme) + 1) % this.themes.length;
+            const nextTheme = this.themes[nextIndex];
+            
+            button.innerHTML = isCollapsed
+                ? `<i class="fas ${themeIcons[this.currentTheme]}"></i>`
+                : `<i class="fas ${themeIcons[this.currentTheme]} me-2"></i><span class="nav-text">Switch to ${themeNames[nextTheme]}</span>`;
 
             const icon = button.querySelector('i');
             if (icon) {
-                // Remove icon animation
                 icon.style.transform = 'rotate(0) scale(1)';
             }
         }
 
         // Update mobile theme toggle
         if (mobileButton) {
-            mobileButton.innerHTML = this.currentTheme === 'dark'
-                ? '<i class="fas fa-sun"></i>'
-                : '<i class="fas fa-moon"></i>';
+            mobileButton.innerHTML = `<i class="fas ${themeIcons[this.currentTheme]}"></i>`;
         }
+        
+        // Update dropdown if it exists
+        this.updateThemeDropdown();
+    },
+    
+    updateThemeDropdown() {
+        const dropdownItems = document.querySelectorAll('.theme-selector .dropdown-item');
+        dropdownItems.forEach(item => {
+            item.classList.remove('active');
+            const theme = item.getAttribute('onclick').match(/'([^']+)'/)[1];
+            if (theme === this.currentTheme) {
+                item.classList.add('active');
+            }
+        });
     },
 
     setupThemeToggle() {
@@ -595,6 +620,16 @@ const themeManager = {
                 }
             });
         }
+        
+        // Setup dropdown theme selection
+        const dropdownItems = document.querySelectorAll('.theme-selector .dropdown-item');
+        dropdownItems.forEach(item => {
+            item.addEventListener('click', (e) => {
+                e.preventDefault();
+                const theme = item.getAttribute('onclick').match(/'([^']+)'/)[1];
+                this.setTheme(theme, true);
+            });
+        });
     },
 
     setupSystemThemeListener() {
@@ -605,7 +640,7 @@ const themeManager = {
         const handleThemeChange = (e) => {
             if (!localStorage.getItem('theme')) {
                 const theme = e.matches ? 'dark' : 'light';
-                this.applyTheme(theme, false);
+                this.setTheme(theme, false);
             }
         };
 
@@ -618,14 +653,15 @@ const themeManager = {
         // Set initial theme based on system preference if no user preference
         if (!localStorage.getItem('theme')) {
             const theme = mediaQuery.matches ? 'dark' : 'light';
-            this.applyTheme(theme, false);
+            this.setTheme(theme, false);
         }
-    },
-
-    addTransitionStyles() {
-        // This function is now empty since we removed all transitions
     }
 };
+
+// Global function for dropdown selection
+function setTheme(theme) {
+    themeManager.setTheme(theme, true);
+}
 
 // ========== INITIALIZATION ==========
 document.addEventListener("DOMContentLoaded", function () {
