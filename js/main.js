@@ -667,7 +667,7 @@ const themeManager = {
 // ========== INITIALIZATION ==========
 document.addEventListener("DOMContentLoaded", function () {
     themeManager.init();
-    createAnimatedFavicon();
+    // createAnimatedFavicon(); Let it be commit out as function is not defined
 
     // Add keyboard shortcut for theme toggle (Ctrl/Cmd + T)
     document.addEventListener('keydown', function (e) {
