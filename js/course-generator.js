@@ -2,8 +2,109 @@
 const courseData = { 
     overview: "", courseObjectives: "", syllabus: "", courseTitle: "", faqData: [],
     overviewSections: [], courseObjectivesList: [], syllabusModules: [], courseObjectivesIntro: "",
-    fileProcessed: false
+    fileProcessed: false,
+    overviewImageUrl: "" // Add this to store the image URL
 };
+
+function showOverviewImageModal() {
+    if (!courseData.fileProcessed) {
+        utils.showNotification("Please upload and process a DOCX file first.", "warning");
+        return;
+    }
+    
+    // Create modal HTML dynamically
+    const modalHTML = `
+        <div class="modal fade" id="overviewImageModal" tabindex="-1" aria-labelledby="overviewImageModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="overviewImageModalLabel">
+                            <i class="fas fa-image me-2"></i>Overview Section Image
+                        </h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                       <div class="mb-3">
+                            <label for="overviewImageInput" class="form-label">
+                                <i class="fas fa-link me-2"></i>Image URL (Optional)
+                            </label>
+                            <input type="url" class="form-control" id="overviewImageInput" 
+                                   placeholder="https://example.com/overview-image.jpg"
+                                   value="${courseData.overviewImageUrl || ''}">
+                            <div class="form-text">
+                                Enter a URL for the overview section image. Leave empty if no image is available.
+                            </div>
+                        </div>
+                        <div class="mb-3" style="display: none !important;">
+                            <label for="overviewImageAlt" class="form-label">
+                                <i class="fas fa-text me-2"></i>Alt Text (Optional)
+                            </label>
+                            <input class="form-control" id="overviewImageAlt" 
+                                   placeholder="Description of the image"
+                                   value="${courseData.courseTitle || 'Course Name'}">
+                        </div>
+                        <div class="alert alert-info d-flex align-items-center">
+                            <i class="fas fa-info-circle me-2 fs-5"></i>
+                            <div>
+                                <small>
+                                    If an image URL is provided, the video iframe will be commented out 
+                                    and the image will be displayed instead.
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                            <i class="fas fa-times me-2"></i>Cancel
+                        </button>
+                        <button type="button" class="btn btn-primary" onclick="generateOverviewWithImage()">
+                            <i class="fas fa-code me-2"></i>Generate Overview Code
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    // Remove existing modal if any
+    const existingModal = document.getElementById('overviewImageModal');
+    if (existingModal) {
+        existingModal.remove();
+    }
+    
+    // Add modal to document
+    document.body.insertAdjacentHTML('beforeend', modalHTML);
+    
+    // Initialize and show modal
+    const modal = new bootstrap.Modal(document.getElementById('overviewImageModal'));
+    modal.show();
+    
+    // Focus on input when modal is shown
+    document.getElementById('overviewImageModal').addEventListener('shown.bs.modal', function () {
+        document.getElementById('overviewImageInput').focus();
+    });
+    
+    // Clear image URL when modal is hidden without generating
+    document.getElementById('overviewImageModal').addEventListener('hidden.bs.modal', function () {
+        courseData.overviewImageUrl = '';
+    });
+}
+
+function generateOverviewWithImage() {
+    // Get values from modal
+    const imageUrl = document.getElementById('overviewImageInput').value.trim();
+    const altText = document.getElementById('overviewImageAlt').value.trim() || courseData.courseTitle || 'Course Name';
+    
+    // Store the image URL
+    courseData.overviewImageUrl = imageUrl;
+    
+    // Close modal
+    const modal = bootstrap.Modal.getInstance(document.getElementById('overviewImageModal'));
+    modal.hide();
+    
+    // Generate overview code with image
+    generateOverviewCode();
+}
 
 function uploadCourseFile() {
     const file = document.getElementById("courseFileInput").files[0];
@@ -770,7 +871,26 @@ function extractLessonsDirectly(elementsArray, startIndex) {
 function generateOverviewCode() {
     if (!courseData.fileProcessed) return utils.showNotification("Please upload and process a DOCX file first.", "warning");
     
-    const videoHtml = `<!-- <div class="col-md-5 col-sm-12 elementor-col-40 elementor-column ml-md-3 p-0 pb-0 pt-0 verified-field-container" style="float:right"><div class="demo-video"><iframe title="${courseData.courseTitle || 'Course Video'}" src="https://player.vimeo.com/video/680313019?h=6c9335ab94" width="560" height="200" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen data-ready="true"></iframe><img src="" class="w-100 ps-3" alt="${courseData.courseTitle || 'Course Name'}"></div></div> -->`;
+    // Create video/image HTML based on whether image URL is provided
+    let mediaHtml = '';
+    
+    if (courseData.overviewImageUrl) {
+        // If image URL is provided, comment out iframe and show image
+        mediaHtml = `<div class="col-md-5 col-sm-12 elementor-col-40 elementor-column ml-md-3 p-0 pb-0 pt-0 verified-field-container" style="float:right">
+            <div class="demo-video">
+                <!-- <iframe title="${courseData.courseTitle || 'Course Video'}" src="https://player.vimeo.com/video/680313019?h=6c9335ab94" width="560" height="200" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen data-ready="true"></iframe> -->
+                <img src="${courseData.overviewImageUrl}" class="w-100" alt="${courseData.courseTitle || 'Course Name'}">
+            </div>
+        </div>`;
+    } else {
+        // If no image URL, keep the original iframe
+        mediaHtml = `<!-- <div class="col-md-5 col-sm-12 elementor-col-40 elementor-column ml-md-3 p-0 pb-0 pt-0 verified-field-container" style="float:right">
+            <div class="demo-video">
+                <iframe title="${courseData.courseTitle || 'Course Video'}" src="https://player.vimeo.com/video/680313019?h=6c9335ab94" width="560" height="200" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen data-ready="true"></iframe>
+                <img src="" class="w-100" alt="${courseData.courseTitle || 'Course Name'}">
+            </div>
+        </div> -->`;
+    }
     
     let contentHtml = "";
     if (courseData.overviewSections.length > 0) {
@@ -791,9 +911,13 @@ function generateOverviewCode() {
         contentHtml = "<p>No overview content found.</p>";
     }
     
-    const overviewHtml = videoHtml + contentHtml;
+    const overviewHtml = mediaHtml + contentHtml;
     document.getElementById("overviewCode").value = overviewHtml;
     showGeneratedCode('course', 'overviewCodeSection');
+    
+    // Clear the image URL after generation
+    courseData.overviewImageUrl = '';
+    
     utils.showNotification("Overview code generated successfully!", "success");
 }
 
